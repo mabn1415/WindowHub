@@ -1,0 +1,10 @@
+{
+  "bundle": {
+    "resources": {
+      "binaries/WindowHubBridge": "WindowHubBridge"
+    },
+    "macOS": {
+      "signingIdentity": "-"
+    }
+  }
+}

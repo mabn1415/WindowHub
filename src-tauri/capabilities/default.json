@@ -1,0 +1,6 @@
+{
+  "identifier": "main",
+  "description": "WindowHub local UI",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

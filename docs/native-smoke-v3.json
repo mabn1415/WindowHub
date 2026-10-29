@@ -1,0 +1,134 @@
+{
+  "platform": "macos",
+  "timestamp": "2026-10-29T01:11:44.559611+00:00",
+  "target": "dedicated test app only",
+  "checks": [
+    {
+      "check": "same-monitor split 60:40",
+      "passed": true,
+      "actual": [
+        {
+          "height": 949,
+          "width": 907,
+          "x": 0,
+          "y": 33
+        },
+        {
+          "height": 949,
+          "width": 605,
+          "x": 907,
+          "y": 33
+        }
+      ]
+    },
+    {
+      "check": "overlap",
+      "passed": true,
+      "actual": [
+        {
+          "height": 600,
+          "width": 700,
+          "x": 20,
+          "y": 53
+        },
+        {
+          "height": 600,
+          "width": 700,
+          "x": 80,
+          "y": 113
+        }
+      ]
+    },
+    {
+      "check": "two real monitors",
+      "passed": true,
+      "actual": [
+        {
+          "height": 949,
+          "width": 1512,
+          "x": 0,
+          "y": 33
+        },
+        {
+          "height": 1050,
+          "width": 1920,
+          "x": 0,
+          "y": -1050
+        }
+      ]
+    },
+    {
+      "check": "true Stack: identical region",
+      "passed": true,
+      "actual": [
+        {
+          "height": 949,
+          "width": 1512,
+          "x": 0,
+          "y": 33
+        },
+        {
+          "height": 949,
+          "width": 1512,
+          "x": 0,
+          "y": 33
+        }
+      ]
+    },
+    {
+      "check": "cross-monitor EV2785",
+      "passed": true,
+      "actual": [
+        {
+          "height": 949,
+          "width": 1512,
+          "x": 0,
+          "y": 33
+        },
+        {
+          "height": 1050,
+          "width": 1920,
+          "x": 0,
+          "y": -1050
+        }
+      ]
+    },
+    {
+      "check": "cross-monitor EV2780",
+      "passed": true,
+      "actual": [
+        {
+          "height": 949,
+          "width": 1512,
+          "x": 0,
+          "y": 33
+        },
+        {
+          "height": 2530,
+          "width": 1440,
+          "x": -1440,
+          "y": -1524
+        }
+      ]
+    },
+    {
+      "check": "captured active window and destination monitor",
+      "passed": true
+    },
+    {
+      "check": "native fullscreen",
+      "passed": true,
+      "message": "全画面表示にしました"
+    },
+    {
+      "check": "restore original bounds",
+      "passed": true
+    },
+    {
+      "check": "reject stale target identity",
+      "passed": true
+    }
+  ],
+  "monitor_count": 3,
+  "completed": true
+}

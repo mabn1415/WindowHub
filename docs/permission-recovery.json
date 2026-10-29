@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-29",
+  "application": "/Applications/WindowHub.app",
+  "cause": "macOS rejected the current app because its code requirement did not match the previous Accessibility grant. System Settings still displayed the previous entry as enabled.",
+  "tcc_error": "Failed to match existing code requirement for subject local.windowhub.desktop and service kTCCServiceAccessibility",
+  "old_requirement_cdhash": "5bd861dadcda14d17b275acf7247025a05839959",
+  "current_requirement_cdhash": "9b31bb391e204e5237c38da2c9eb6efa66562633",
+  "action": "User approved removing and re-adding only WindowHub; user completed Touch ID. Re-added /Applications/WindowHub.app in System Settings and relaunched the app.",
+  "verified": {
+    "settings_toggle_on": true,
+    "monitor_count": 3,
+    "window_count": 7,
+    "arrange_real_windows_visible": true,
+    "quick_target_detected": true
+  },
+  "not_performed": [
+    "No rebuild or re-signing",
+    "No changes to other apps permissions",
+    "No moves of user application windows"
+  ],
+  "installed_executable_sha256": "25501e60558c4ae80736569a1ed0794c12c1e4f1da0dd05b9467bbf997dad280"
+}

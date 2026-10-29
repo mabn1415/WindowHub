@@ -1,0 +1,27 @@
+{
+  "verified_at": "2026-10-29T12:22:53.306935+09:00",
+  "app": "/Applications/WindowHub.app",
+  "target": "dedicated test application only",
+  "keyboard": "physical keys provided by user",
+  "checked": [
+    "left half",
+    "right half",
+    "top half",
+    "bottom half",
+    "maximize in work area",
+    "repeated left and right across monitors"
+  ],
+  "current_bindings": {
+    "left": "Control+Super+1",
+    "right": "Control+Super+2",
+    "top": "Control+Super+3",
+    "bottom": "Control+Super+4",
+    "maximize": "Control+Super+Enter"
+  },
+  "user_confirmed": [
+    "left half",
+    "repeated left moves to another display"
+  ],
+  "windows_runtime": "not tested",
+  "app_binary_changed": false
+}

@@ -1,0 +1,13 @@
+{
+  "blur": {
+    "front_is_hub": false,
+    "front_is_test": true,
+    "hub_visible": false
+  },
+  "esc": {
+    "hub_visible": false,
+    "front_is_hub": false,
+    "front_is_test": true
+  },
+  "scope": "dedicated test app and WindowHub only; no TCC changes"
+}
