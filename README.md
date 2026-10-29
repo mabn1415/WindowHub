@@ -7,11 +7,13 @@ macOS / Windows共通の、キーボード中心ウィンドウ配置アプリ�
 ターミナルで次の2行を実行すると、依存関係の準備、ビルド、`/Applications/WindowHub.app` への配置、起動まで行います。
 
 ```sh
-cd ~/Documents/WindowHub
+cd ~/WindowHub
 ./install.sh
 ```
 
-事前にNode.js 22以降、npm、Rust stable、Xcode Command Line Toolsが必要です。プロジェクト内の `.tools/` にRustがある場合はそれを使います。インストーラーは不足しているソフトを勝手にインストールせず、必要なものを表示します。依存関係の取得にはインターネット接続が必要です。Apple Silicon Macで確認しています。Windows用ではありません。
+`./install.sh` がビルド環境を確認します。利用可能なNode.js（22.12以降）・npmと、`src-tauri/Cargo.toml` の最低バージョンを満たすRustがあれば再利用します。不足・旧バージョンの場合は、公式配布元からNode.js 22系とnpmを `.tools/node/`、Rust stableを `.tools/cargo/`・`.tools/rustup/` に自動導入します。Node.jsのダウンロードは公式SHA-256チェックサムで照合します。シェルの設定ファイルは変更しません。Tauri CLIを含む依存関係は `npm ci --include=dev` で準備します。
+
+Xcode Command Line Toolsがない場合はmacOSのインストール画面を開いて停止します。画面で同意・インストールを完了した後、もう一度 `./install.sh` を実行してください。Xcodeのライセンス同意・初期設定、アクセシビリティ許可、Touch ID認証は自動化しません。取得やビルドに失敗した場合は表示されたエラーを確認し、解消後に同じコマンドで再実行できます。依存関係の取得にはインターネット接続が必要です。Apple Silicon Macで確認しています。Windows用ではありません。
 
 前のWindowHubがある場合は `work/install-backups/` にアプリのコピーを残します。設定や保存したレイアウトは引き継がれます。ビルドに失敗した場合、インストール済みのアプリは変更しません。同名の別アプリやファイルは上書きしません。
 
@@ -98,16 +100,16 @@ Command＋,で設定を開き、「キー操作」で、起動キーの記録・
 
 ## 開発
 
-Node.js 22以降、npm、Rust stable、各OSのTauriビルド環境が必要です。macOSはXcode Command Line Tools、WindowsはMSVC C++ビルドツール・WebView2を使います。
+Node.js 22.12以降、npm、Rust stable、各OSのTauriビルド環境が必要です。macOSはXcode Command Line Tools、WindowsはMSVC C++ビルドツール・WebView2を使います。
 
 ```sh
-cd ~/Documents/WindowHub
+cd ~/WindowHub
 npm ci
 ./run.sh dev
 ./run.sh build --bundles app
 ```
 
-`run.sh` は、このMacのプロジェクト内 `.tools/` にRustがあれば選択します。通常のRust導入環境では `npm run tauri -- dev` / `npm run tauri -- build` を使えます。Windowsは `npm ci` → `npm run tauri -- build --bundles nsis` です。Mac上でWindowsインストーラーは作成していません。
+初回は `./install.sh` で環境を準備できます。`run.sh` はプロジェクト内 `.tools/` にNode.jsやRustがあれば選択します。通常のRust導入環境では `npm run tauri -- dev` / `npm run tauri -- build` を使えます。Windowsは `npm ci` → `npm run tauri -- build --bundles nsis` です。Mac上でWindowsインストーラーは作成していません。
 
 ```sh
 npm test

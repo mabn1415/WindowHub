@@ -8,20 +8,15 @@ MODE=build
 case "${1:-}" in
   "") ;;
   --use-built) MODE=existing ;;
-  --help|-h) printf '%s\n' '使い方: ./install.sh [--use-built]' '既定はソースからビルドしてインストールします。--use-built は作成済みアプリを使います。'; exit 0 ;;
+  --help|-h) printf '%s\n' '使い方: ./install.sh [--use-built]' '既定は不足するビルド環境を自動準備し、ソースからビルドしてインストールします。--use-built は作成済みアプリを使います。'; exit 0 ;;
   *) printf '不明な引数: %s\n' "$1" >&2; exit 2 ;;
 esac
 if [ "$#" -gt 1 ]; then echo '引数は1つまでです。' >&2; exit 2; fi
 if [ "$(uname -s)" != Darwin ]; then echo 'このインストーラーはmacOS用です。' >&2; exit 1; fi
 cd "$ROOT"
 if [ "$MODE" = build ]; then
-  for cmd in node npm xcrun swiftc; do
-    if ! command -v "$cmd" >/dev/null 2>&1; then printf '%s が必要です。READMEの事前準備を確認してください。\n' "$cmd" >&2; exit 1; fi
-  done
-  if ! xcrun --find swiftc >/dev/null 2>&1; then echo 'Xcode Command Line Toolsが必要です。' >&2; exit 1; fi
-  if ! "$ROOT/run.sh" --help >/dev/null 2>&1; then echo 'RustまたはTauriの準備ができていません。READMEを確認してください。' >&2; exit 1; fi
-  echo '依存関係を準備しています…'
-  npm ci
+  source "$ROOT/scripts/setup-environment.sh"
+  setup_environment
   echo 'WindowHubをビルドしています…'
   ./run.sh build --bundles app
 fi
