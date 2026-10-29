@@ -1,0 +1,11 @@
+.github/
+.tools/
+WindowHub.app/
+dist/
+node_modules/
+scripts/windows-check/target/
+src-tauri/binaries/
+src-tauri/gen/
+src-tauri/target/
+test-results/
+work/
