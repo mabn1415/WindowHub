@@ -139,7 +139,7 @@ func fullscreen(_ item:[String:Any])->[String:Any] {
     return ["id":id,"ok":ok,"message":ok ? (enabled ? "全画面表示にしました" : "全画面を解除しました") : "要求は送信しましたが全画面状態を確認できませんでした。アプリをご確認ください"]
 }
 
-while let line = readLine() {
+func handle(_ line: String) {
     do {
         guard let data=line.data(using:.utf8), let request=try JSONSerialization.jsonObject(with:data) as? [String:Any], let action=request["action"] as? String else { throw NSError(domain:"Invalid request",code:1) }
         let result: Any
@@ -169,3 +169,13 @@ while let line = readLine() {
         print(String(data:response,encoding:.utf8)!); fflush(stdout)
     }
 }
+
+// AppKit must own the main event loop to receive screen-configuration changes.
+// Read requests off the main thread; process them serially on the AppKit thread.
+DispatchQueue(label: "local.windowhub.bridge.input").async {
+    while let line = readLine() {
+        DispatchQueue.main.sync { handle(line) }
+    }
+    DispatchQueue.main.async { exit(0) }
+}
+NSApplication.shared.run()

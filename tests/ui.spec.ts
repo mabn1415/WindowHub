@@ -476,3 +476,44 @@ test("Compact Home hides settings, opens them with Command-comma, and has no dra
     page.getByRole("heading", { name: "一括配置", exact: true }),
   ).toBeVisible();
 });
+
+test("Arrange reads the latest display configuration and preserves a draft on disconnection", async ({ page }) => {
+  await page.addInitScript(({ theme }) => {
+    const display = (id: string, x: number) => ({ id, name: id, scale: 1, rect: { x, y: 0, width: 1200, height: 900 } });
+    const state: any = {
+      settings: { schema_version: 1, shortcut: "Control+Shift+Space", theme, profiles: {}, guide_seen: true, guide_mode: "compact", learning_enabled: true, configurations: {}, hub_screen: "mouse", quick_enabled: false, quick_shortcuts: {} },
+      snapshot: { trusted: true, platform: "macos", monitors: [display("First", 0)], windows: [{ id: "w", pid: 10, app_id: "test", app_name: "Test App", title: "Test", resizable: true, rect: { x: 20, y: 20, width: 700, height: 600 } }] },
+      topology: "one", context: { window: null, monitor: null, app_pid: null }, suggestions: [], compatible_profiles: [], shortcut_error: null, history_error: null,
+    };
+    (window as any).setTestDisplays = (two: boolean) => {
+      state.snapshot.monitors = two ? [display("First", 0), display("Second", 1200)] : [display("First", 0)];
+      state.topology = two ? "two" : "one";
+    };
+    (window as any).__TAURI_EVENT_PLUGIN_INTERNALS__ = { unregisterListener() {} };
+    (window as any).__TAURI_INTERNALS__ = {
+      transformCallback: () => 1,
+      invoke: async (command: string) => {
+        if (command === "bootstrap") return structuredClone(state);
+        if (command === "environment") return { topology: state.topology };
+        if (command === "plugin:event|listen") return 1;
+        return null;
+      },
+    };
+  }, { theme: themePresets[0].theme });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: /Arrange 一括配置/ })).toBeVisible();
+  await page.evaluate(() => (window as any).setTestDisplays(true));
+  await page.keyboard.press("a");
+  await expect(page.getByRole("heading", { name: "配置するウィンドウを選ぶ" })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name: "移動先のディスプレイを選ぶ" })).toBeVisible();
+  await expect(page.getByText("Second", { exact: false }).first()).toBeVisible();
+  await page.evaluate(() => (window as any).setTestDisplays(false));
+  await expect(page.getByText("モニター構成が変わりました。編集内容を破棄して再取得してください。", { exact: false })).toBeVisible({ timeout: 8000 });
+  await expect(page.getByText("Second", { exact: false }).first()).toBeVisible();
+  await page.getByRole("button", { name: "再取得", exact: true }).click();
+  await expect(page.getByRole("button", { name: /Arrange 一括配置/ })).toBeVisible();
+  await page.keyboard.press("a");
+  await page.keyboard.press("Enter");
+  await expect(page.getByText("Second", { exact: false })).toHaveCount(0);
+});

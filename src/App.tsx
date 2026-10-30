@@ -232,19 +232,24 @@ export default function App() {
   useEffect(() => {
     if (!native || !data || !visible) return;
     let running = false;
+    let cancelled = false;
     const timer = setInterval(async () => {
       if (running || busy) return;
       running = true;
       try {
         const e = await api<{ topology: string }>("environment");
-        if (e.topology !== data.topology) setChanged(true);
+        if (cancelled) return;
+        if (e.topology !== data.topology) {
+          if (screen === "home" && !draft) await refresh();
+          else setChanged(true);
+        }
       } catch {
       } finally {
         running = false;
       }
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [visible, data?.topology, busy]);
+    }, 3000);
+    return () => { cancelled = true; clearInterval(timer); };
+  }, [visible, data?.topology, busy, screen, draft, refresh]);
   useEffect(() => {
     if (screen === "settings")
       void api<{ count: number }>("history_info")
@@ -358,10 +363,18 @@ export default function App() {
     setResults([]);
   }
   async function prepare() {
-    if (draft) return draft;
-    const d = data || (await refresh());
-    if (initial) {
-      const r = await api<Restored>("restore_layout", { id: initial.id });
+    if (draft) {
+      const environment = await api<{ topology: string }>("environment");
+      if (changed || environment.topology !== data?.topology) {
+        setChanged(true);
+        throw Error("ディスプレイ構成が変わりました。再取得してください");
+      }
+      return draft;
+    }
+    const d = await refresh();
+    const currentInitial = (d.settings.profiles[d.topology] || []).find((l) => l.is_initial);
+    if (currentInitial) {
+      const r = await api<Restored>("restore_layout", { id: currentInitial.id });
       loadResult(d, r);
       return null;
     }
